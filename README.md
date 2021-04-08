@@ -1,6 +1,6 @@
 # NF16-TP3 Listes Chaînées
 
-💡 C programming
+💡 Programmation en C
 
 📚 Travaux Pratiques de NF16 (Cours "Algorithmique et structures de données" de l'Université de Technologie de Compiègne). 
 
