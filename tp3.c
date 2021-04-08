@@ -76,6 +76,39 @@ t_semaine_elt *ajouterSemaine (t_semaine_elt *liste, t_semaine_elt *semaine){
 /* ========== SUPPRIMER SEMAINE DANS LISTE SEMAINES ========== */
 t_semaine_elt *supprimerSemaine (t_semaine_elt *liste, int semaine){
 
+    if ((semaine<1 && semaine>53) && (nb_vaccins <0)) {
+        printf("Le nombre de semaines doit être compris entre 1 et 53 !");
+        printf("Le nombre de vaccins doit être strictement positif !");
+        {exit(EXIT_FAILURE);}
+    }
+
+    else {
+        t_semaine_elt *header = liste;
+        if (liste == NULL){
+            printf("La liste est vide");
+            return liste;
+        }
+        if (liste->numero_semaine==semaine{ // si premier
+                header = liste;
+                liste = liste->suivant;
+                free(header);
+            }
+            else {
+                while (header->numero_semaine!=semaine && header->numero_semaine < semaine && header!=NULL) {
+                       parent = header;
+                       header = header->suivant;
+                }
+                if (header->numero_semaine == semaine){
+                    parent->suivant = header->suivant;
+                    free(header);
+                    header = NULL;
+                }
+                else {
+                        printf("La semaine n'existe pas");
+                        return liste;
+                }
+            }
+    }
     return liste;
 }
 
