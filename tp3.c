@@ -4,7 +4,9 @@
 
 /* ========== CREER SEMAINE ========== */
 t_semaine_elt *creerSemaine(int num_semaine, int nb_vaccins) {
+    // Allouer de la mémoire pour la nouvelle semaine
     t_semaine_elt *nouvelleSemaine = malloc(sizeof(t_semaine_elt));
+    // Si l'espace mémoire est insuffisant, un message d'erreur apparaît.
     if (nouvelleSemaine == NULL) {exit(EXIT_FAILURE);}
 
     else {
@@ -49,14 +51,35 @@ t_semaine_elt *ajouterSemaine (t_semaine_elt *liste, t_semaine_elt *semaine){
         printf("Le nombre de vaccins doit être strictement positif !");
         {exit(EXIT_FAILURE);}
     }
-
-    t_semaine_elt* header = liste;
-    while (header->numero_semaine > semaine->numero_semaine){
-        header = header->suivant;
+    // si liste vide ou élément à ajouter en tête de liste
+    if (liste == NULL || semaine->numero_semaine <= liste->numero_semaine){
+        semaine->suivant = liste;
+        liste = semaine; //nouvelle tête de liste
     }
-    semaine->suivant = header->suivant;
-    header->suivant = semaine;
+    else { //sinon chercher la place précédente et insérer après
+        t_semaine_elt* parent = liste;
+        t_semaine_elt* header = liste;
+        // Il faut trouver l'élément précédent l'élément à insérer
+        // Donc la liste est parcourue tant que l'élément courant n'est pas NULL et que la valeur de l'élément à insérer est supérieure à la valeur de l'élément courant
+        while (header!=NULL && semaine->numero_semaine > header->numero_semaine){
+        // Il faut deux pointeurs : un pour l'élément courant et un pour l'élément précédent
+            parent = header;
+            header = header->suivant;
+        }
+        parent->suivant = semaine;
+        semaine->suivant = header;
+    }
+    return liste;
 }
+
+
+/* ========== SUPPRIMER SEMAINE DANS LISTE SEMAINES ========== */
+t_semaine_elt *supprimerSemaine (t_semaine_elt *liste, int semaine){
+
+    return liste;
+}
+
+
 
 /* ========== AJOUT NB VACCIN DANS LISTE SEMAINES ========== */
 t_semaine_elt *ajouterVaccinS(t_semaine_elt *liste, int semaine, int nb_vaccins){
@@ -68,11 +91,16 @@ t_semaine_elt *ajouterVaccinS(t_semaine_elt *liste, int semaine, int nb_vaccins)
     }
     else {
         t_semaine_elt *header = liste;
-        while (header->numero_semaine!=semaine && header->numero_semaine > semaine) {
+        // Si la liste chaînée actuelle est vide, alors l'en-tête de la liste chaînée est remplacée par le nouvel élément semaine.
+        if (header == NULL){
+            return creerSemaine(semaine, nb_vaccins);
+        }
+        // On s'arrête quand on a trouvé ou quand le numéro de la semaine à chercher devient inférieur à numero_semaine car c'est ordonné donc impossible de trouver dans les prochaines itérations.
+        while (header->numero_semaine!=semaine && header->numero_semaine < semaine && header!=NULL) {
                header=header->suivant;
         }
         if (header->numero_semaine == semaine)
-            header->nombre_vaccins+=nb_vaccins;
+            header->nombre_vaccins += nb_vaccins;
         else
           ajouterSemaine(liste, creerSemaine(semaine, nb_vaccins));
     }
@@ -91,10 +119,21 @@ t_semaine_elt *deduireVaccinS(t_semaine_elt *liste, int semaine, int nb_vaccins)
     }
     else {
         t_semaine_elt *header = liste;
-        while (header->numero_semaine!=semaine) {
+        if (liste == NULL){
+            printf("La liste est vide");
+            return liste;
+        }
+        while (header->numero_semaine!=semaine && header->numero_semaine < semaine && header!=NULL) {
                header=header->suivant;
         }
-        header->nombre_vaccins-=nb_vaccins;
+        if (header->numero_semaine == semaine)
+            header->nombre_vaccins -= nb_vaccins;
+            if (header->nombre_vaccins =< 0)
+                supprimerSemaine(liste, semaine);
+        else {
+                printf("La semaine n'existe pas");
+                return liste;
+        }
     }
     return liste;
 }
