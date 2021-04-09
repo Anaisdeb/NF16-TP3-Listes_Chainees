@@ -6,8 +6,8 @@
 
 ## Composition de l'équipe de projet
 
-  * Anaïs Débureaux
   * Nada Slimani
+  * Anaïs Débureaux
   
 ## Contenu du répertoire
   
