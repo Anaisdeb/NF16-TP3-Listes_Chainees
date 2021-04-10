@@ -170,7 +170,7 @@ t_semaine_elt *deduireVaccinS(t_semaine_elt *liste, int semaine, int nb_vaccins)
             if (header->nombre_vaccins < nb_vaccins)
                 printf("Impossible. Veuillez saisir un nombre de vaccins inferieur ou egal au nombre disponible : %d", header->nombre_vaccins);
             header->nombre_vaccins -= nb_vaccins;
-            if (header->nombre_vaccins = 0)
+            if (header->nombre_vaccins == 0)
                 supprimerSemaine(liste, semaine);
         else {
                 printf("La semaine n'existe pas");
@@ -229,24 +229,30 @@ t_ville_elt* trierVilles (t_ville_elt *liste){
 
 /* ========== RETRAIT NB VACCIN DE LISTE VILLES ========== */
 t_ville_elt *deduireVaccinV(t_ville_elt *liste, char* ville, int semaine, int nb_vaccins){
-    while (liste->suivant!=NULL && liste->nom_ville!=ville){
-        liste=liste->suivant;
+    t_ville_elt *header = liste;
+    if (liste == NULL){
+        printf("La liste de villes est vide");
+        return liste;
+    }
+    while (header->nom_ville!=ville && header->suivant!=NULL){
+        header=header->suivant;
     }
 
-    if (liste = NULL){
+    if (header->nom_ville == ville){
+        if(header->nombre_vaccins_total < nb_vaccins){
+            printf("Impossible. Veuillez saisir un nombre de vaccins inferieur ou egal au nombre total disponible : %d", header->nombre_vaccins_total);
+            deduireVaccinS(liste->semaines_planifiees, semaine, nb_vaccins);
+        }
+        // Cas où la ville n'a plus de vaccins
+        if (header->nombre_vaccins_total == 0)
+            liste = supprimerVille(liste, ville);
+    }
+    else {
         printf("La ville n'existe pas.");
         return liste;
     }
-    else {
-        deduireVaccinS(liste->semaines_planifiees, semaine, nb_vaccins);
-        // Ville vide ?
-    }
     return trierVilles(liste);
 }
-
-/// CAS 1 : supp semaine FONCTION DEJA CREE
-/// CAS 2 : trier villes (rien ne change est une possibilité)
-/// CAS 3 : supp ville A CREER et à appeler si nb total vaccin = 0
 
 /* ========== AFFICHER STOCK D'UN VACCIN ========== */
 void afficherStock(t_vaccin_elt *vaccin){
