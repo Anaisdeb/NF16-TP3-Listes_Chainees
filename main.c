@@ -34,22 +34,23 @@ int main()
             case '1' :
                 if (instance >10){
                     printf("La liste de vaccin est complète. Veuillez en supprimer un pour en ajouter un nouveau.");
-                    break;
                 }
-                printf("Veuillez entrer un nom de vaccin.\n");
-                scanf("%124s", marqueV);
-                t_vaccin_elt* nouveau_vaccin = creerVaccin(marqueV);
-                GESTION_VACCINS[instance] = nouveau_vaccin;
-                printf("Le vaccin %s est initialise ! \n",marqueV);
-                instance += 1;
-                printf("Il y a %d vaccins \n", instance);
+                else {
+                    printf("Veuillez entrer un nom de vaccin.\n");
+                    scanf("%124s", marqueV);
+                    t_vaccin_elt* nouveau_vaccin = creerVaccin(marqueV);
+                    GESTION_VACCINS[instance] = nouveau_vaccin;
+                    printf("Le vaccin %s est initialise ! \n",marqueV);
+                    instance += 1;
+                    printf("Il y a %d vaccins \n", instance);
+                }
             break;
 
             case '2' :
                 printf("Veuillez entrer la marque du vaccin.\n");
                 scanf("%s", marqueV);
                 t_vaccin_elt* vaccin = rechercheTableau(marqueV, GESTION_VACCINS);
-                if (nouveau_vaccin==NULL)
+                if (vaccin==NULL)
                     break;
                 else{
                     printf("Veuillez entrer la ville dans laquelle ajouter le stock.\n");
@@ -58,9 +59,9 @@ int main()
                     scanf("%d", &semaine);
                     printf("Veuillez entrer le nombre de vaccins a ajouter au stock.\n");
                     scanf("%d", &quantite);
-                    ajouterVaccinV(vaccin->villes_dispo, ville, semaine, quantite);
+                    vaccin->villes_dispo=ajouterVaccinV(vaccin->villes_dispo, ville, semaine, quantite);
+                    break;
                 }
-            break;
 
             case '3' :
                 // TODO : menu 3
@@ -70,11 +71,12 @@ int main()
                 printf("Veuillez entrer la marque du vaccin.\n");
                 scanf("%s", marqueV);
                 vaccin = rechercheTableau(marqueV, GESTION_VACCINS);
-                if (nouveau_vaccin==NULL)
+                if (vaccin==NULL)
                     break;
-                else
+                else {
                     afficherStock(vaccin);
-            break;
+                    break;
+                }
 
             case '5' :
                 // TODO : menu 5
@@ -93,8 +95,8 @@ int main()
 
             }
             printf("\n\n\n");
+            viderBuffer();
 
         }
-
         return 0;
     }

@@ -28,6 +28,8 @@ t_ville_elt *creerVille(char *ville){
 
     nouvelleVille->nom_ville = ville;
     nouvelleVille->suivant = NULL;
+    nouvelleVille->semaines_planifiees = NULL;
+    nouvelleVille->nombre_vaccins_total = 0;
 
     return nouvelleVille;
 }
@@ -84,7 +86,9 @@ t_ville_elt *ajouterVille (t_ville_elt *liste, t_ville_elt *ville, t_semaine_elt
     ville -> semaines_planifiees = l_semaine;
     liste = ville; // nouvelle tête de liste
 
-    return trierVilles(liste);
+    /// ERREUR ICI
+    //return trierVilles(liste);
+    return liste;
 }
 
 
@@ -136,10 +140,10 @@ t_ville_elt *supprimerVille (t_ville_elt *liste, char* ville){
 /* ========== AJOUT NB VACCIN DANS LISTE SEMAINES ========== */
 t_semaine_elt *ajouterVaccinS(t_semaine_elt *liste, int semaine, int nb_vaccins){
 
-    if (testSemaine(semaine, nb_vaccins) == 0){
+    /*if (testSemaine(semaine, nb_vaccins) == 0){
         {exit(EXIT_FAILURE);}
     }
-    else {
+    else {*/
         t_semaine_elt *header = liste;
         // Si la liste chaînée actuelle est vide, alors l'en-tête de la liste chaînée est remplacée par le nouvel élément semaine.
         if (header == NULL){
@@ -153,7 +157,7 @@ t_semaine_elt *ajouterVaccinS(t_semaine_elt *liste, int semaine, int nb_vaccins)
             header->nombre_vaccins += nb_vaccins;
         else
           ajouterSemaine(liste, creerSemaine(semaine, nb_vaccins));
-    }
+    //}
     return liste;
 }
 
@@ -193,24 +197,24 @@ t_semaine_elt *deduireVaccinS(t_semaine_elt *liste, int semaine, int nb_vaccins)
 /* ========== AJOUT NB VACCIN DANS LISTE VILLES ========== */
 t_ville_elt *ajouterVaccinV(t_ville_elt *liste, char* ville, int semaine, int nb_vaccins){
 
-    // ERREUR ICI
     if (liste == NULL){
-        liste = ajouterVille(creerVille(ville), liste, creerSemaine(semaine, nb_vaccins));
+        liste = ajouterVille(liste, creerVille(ville), creerSemaine(semaine, nb_vaccins));
         return liste;
     }
-    printf("bonjour");
-    while (liste->suivant!=NULL && liste->nom_ville!=ville){
-        liste=liste->suivant;
+    t_ville_elt *header = liste;
+    while (header->suivant!=NULL && header->nom_ville!=ville){
+        header=header->suivant;
     }
 
-    if (liste == NULL){
-        liste = ajouterVille(creerVille(ville), liste, creerSemaine(semaine, nb_vaccins));
+    if (header == NULL){ // On crée la ville
+        liste = ajouterVille(liste, creerVille(ville), creerSemaine(semaine, nb_vaccins));
         return liste;
     }
     else {
-        ajouterVaccinS(liste->semaines_planifiees, semaine, nb_vaccins);
+        ajouterVaccinS(header->semaines_planifiees, semaine, nb_vaccins);
     }
-    return trierVilles(liste);
+    return liste;
+    //return trierVilles(liste);
 }
 
 
@@ -298,12 +302,12 @@ t_ville_elt *deduireVaccinV(t_ville_elt *liste, char* ville, int semaine, int nb
 /* ========== AFFICHER STOCK D'UN VACCIN ========== */
 void afficherStock(t_vaccin_elt *vaccin){
     t_ville_elt *headerV = vaccin->villes_dispo;
-    printf("%s :", vaccin->marque);
+    printf("%s : \n", vaccin->marque);
     while (headerV!=NULL){
-        printf("--- %s [Total = %d]", headerV->nom_ville, headerV->nombre_vaccins_total);
+        printf("--- %s [Total = %d] \n", headerV->nom_ville, headerV->nombre_vaccins_total);
         t_semaine_elt *headerS = headerV->semaines_planifiees;
         while (headerS!=NULL){
-            printf("\t --- semaine %d : %d", headerS->numero_semaine, headerS->nombre_vaccins);
+            printf("\t --- semaine %d : %d \n", headerS->numero_semaine, headerS->nombre_vaccins);
             headerS=headerS->suivant;
         }
         headerV=headerV->suivant;
@@ -316,10 +320,10 @@ void afficherPlanification(t_vaccin_elt *vaccin, int semaine){
     t_ville_elt *headerV = vaccin->villes_dispo;
     printf("%s :", vaccin->marque);
     while (headerV!=NULL){
-        printf("--- %s [Total = %d]", headerV->nom_ville, headerV->nombre_vaccins_total);
+        printf("--- %s [Total = %d] \n", headerV->nom_ville, headerV->nombre_vaccins_total);
         t_semaine_elt *headerS = headerV->semaines_planifiees;
         while (headerS!=NULL && headerS->numero_semaine!=semaine){
-            printf("\t --- semaine %d : %d", headerS->numero_semaine, headerS->nombre_vaccins);
+            printf("\t --- semaine %d : %d \n", headerS->numero_semaine, headerS->nombre_vaccins);
             headerS=headerS->suivant;
         }
         headerV=headerV->suivant;
