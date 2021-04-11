@@ -40,9 +40,12 @@ t_vaccin_elt *creerVaccin(char *marque){
     if (nouveauVaccin == NULL) {exit(EXIT_FAILURE);}
 
     nouveauVaccin->marque = marque;
+    nouveauVaccin->villes_dispo = NULL;
 
     return nouveauVaccin;
 }
+
+
 
 /* ========== AJOUT SEMAINE DANS LISTE SEMAINES ========== */
 t_semaine_elt *ajouterSemaine (t_semaine_elt *liste, t_semaine_elt *semaine){
@@ -76,8 +79,12 @@ t_semaine_elt *ajouterSemaine (t_semaine_elt *liste, t_semaine_elt *semaine){
 /* ========== AJOUT VILLE DANS LISTE VILLES ========== */
 t_ville_elt *ajouterVille (t_ville_elt *liste, t_ville_elt *ville, t_semaine_elt *l_semaine) {
 
-    /// A FAIRE : insérer puis trier
-    return liste;
+    // Ajouter en tête de liste. Si liste vide on crée une nouvelle liste.
+    ville -> suivant = liste;
+    ville -> semaines_planifiees = l_semaine;
+    liste = ville; // nouvelle tête de liste
+
+    return trierVilles(liste);
 }
 
 
@@ -186,6 +193,12 @@ t_semaine_elt *deduireVaccinS(t_semaine_elt *liste, int semaine, int nb_vaccins)
 /* ========== AJOUT NB VACCIN DANS LISTE VILLES ========== */
 t_ville_elt *ajouterVaccinV(t_ville_elt *liste, char* ville, int semaine, int nb_vaccins){
 
+    // ERREUR ICI
+    if (liste == NULL){
+        liste = ajouterVille(creerVille(ville), liste, creerSemaine(semaine, nb_vaccins));
+        return liste;
+    }
+    printf("bonjour");
     while (liste->suivant!=NULL && liste->nom_ville!=ville){
         liste=liste->suivant;
     }
@@ -202,30 +215,57 @@ t_ville_elt *ajouterVaccinV(t_ville_elt *liste, char* ville, int semaine, int nb
 
 
 // TRIER LISTE DE COMMUNES EN FONCTION DU NOMBRE TOTAL DE VACCINS
-// CALCULER NB TOTAL VACCIN
 t_ville_elt* trierVilles (t_ville_elt *liste){
     t_ville_elt *headerV = liste;
-    int max=0;
+    // CALCULER NB TOTAL DE VACCINS
     while (headerV!=NULL){
         t_semaine_elt *headerS = headerV->semaines_planifiees;
         while (headerS!=NULL){
             headerV->nombre_vaccins_total += headerS->nombre_vaccins;
             headerS=headerS->suivant;
         }
-        if (headerV->nombre_vaccins_total<max){
-            // Décalage de la ville vers la gauche
-
-            ///A FAIRE
-
-        }
-        else {
-            max = headerV->nombre_vaccins_total;
-        }
-        headerV=headerV->suivant;
     }
+    // RANGER LES VILLES DANS L'ORDRE CROISSANT DU NB TOTAL DE VACCINS
+   t_ville_elt *temp1 = malloc(sizeof(t_ville_elt));
+   t_ville_elt *temp2 = malloc(sizeof(t_ville_elt));
+   int min;
+   char *ville;
+   t_semaine_elt *semaine;
+   t_ville_elt *suivant;
 
+   for(headerV=liste ; headerV!=NULL ; headerV=headerV->suivant)
+   {
+     temp2=headerV; // On sauvegarde la ville courante
+     min=headerV->nombre_vaccins_total; // On attribue à min le nb total de vaccins de la ville courante
+     // On cherche le minimum parmi tous les éléments suivant de la liste
+     for(temp1=headerV->suivant ; temp1!=NULL ; temp1=temp1->suivant)
+     {
+        if(min > temp1->nombre_vaccins_total) // Si un élément suivant est inférieur à la l'élément courant
+        {
+           temp2=temp1; // Le 3e temporaire est l'adresse de l'élement où se trouve le minimum
+           min=temp2->nombre_vaccins_total;
+           ville=temp2->nom_ville;
+           semaine=temp2->semaines_planifiees;
+           suivant = temp2->suivant;
+        }
+     }
+     // Echange des 2 villes
+     // Echange du nombre de vaccins total
+     temp2->nombre_vaccins_total=headerV->nombre_vaccins_total;
+     headerV->nombre_vaccins_total=min;
+     // Echange du nom de la ville
+     temp2->nom_ville = headerV->nom_ville;
+     headerV->nom_ville = ville;
+     // Echange des semaines
+     temp2->semaines_planifiees=headerV->semaines_planifiees;
+     headerV->semaines_planifiees=semaine;
+     // Echange de l'élément suivant
+     temp2->suivant=headerV->suivant;
+     headerV->suivant=suivant;
+   }
     return liste;
 }
+
 
 
 /* ========== RETRAIT NB VACCIN DE LISTE VILLES ========== */
@@ -257,14 +297,33 @@ t_ville_elt *deduireVaccinV(t_ville_elt *liste, char* ville, int semaine, int nb
 
 /* ========== AFFICHER STOCK D'UN VACCIN ========== */
 void afficherStock(t_vaccin_elt *vaccin){
-    // TODO : ECRIRE ICI LE CODE DE CETTE FONCTION
+    t_ville_elt *headerV = vaccin->villes_dispo;
+    printf("%s :", vaccin->marque);
+    while (headerV!=NULL){
+        printf("--- %s [Total = %d]", headerV->nom_ville, headerV->nombre_vaccins_total);
+        t_semaine_elt *headerS = headerV->semaines_planifiees;
+        while (headerS!=NULL){
+            printf("\t --- semaine %d : %d", headerS->numero_semaine, headerS->nombre_vaccins);
+            headerS=headerS->suivant;
+        }
+        headerV=headerV->suivant;
+    }
 }
-
 
 
 /* ========== AFFICHER STOCK PLANIFIE D'UN VACCIN POUR UNE SEMAINE ========== */
 void afficherPlanification(t_vaccin_elt *vaccin, int semaine){
-    // TODO : ECRIRE ICI LE CODE DE CETTE FONCTION
+    t_ville_elt *headerV = vaccin->villes_dispo;
+    printf("%s :", vaccin->marque);
+    while (headerV!=NULL){
+        printf("--- %s [Total = %d]", headerV->nom_ville, headerV->nombre_vaccins_total);
+        t_semaine_elt *headerS = headerV->semaines_planifiees;
+        while (headerS!=NULL && headerS->numero_semaine!=semaine){
+            printf("\t --- semaine %d : %d", headerS->numero_semaine, headerS->nombre_vaccins);
+            headerS=headerS->suivant;
+        }
+        headerV=headerV->suivant;
+    }
 }
 
 
@@ -283,6 +342,20 @@ bool testSemaine (int semaine, int nb_vaccins){
     }
     else
         return 0;
+}
+
+t_vaccin_elt *rechercheTableau(char *marqueV, t_vaccin_elt *GESTION_VACCINS[10]){
+    int i = 0;
+    while (i < 10 && marqueV != GESTION_VACCINS[i]->marque) {
+      i++;
+    }
+    if (marqueV == GESTION_VACCINS[i]->marque) {
+      return GESTION_VACCINS[i];
+    }
+    else {
+      printf("Vaccin non trouve");
+      return NULL;
+    }
 }
 
 /* ----------------------------------
