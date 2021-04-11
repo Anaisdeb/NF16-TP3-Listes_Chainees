@@ -122,6 +122,7 @@ t_semaine_elt *supprimerSemaine (t_semaine_elt *liste, int semaine){
 /* ========== SUPPRIMER VILLE DANS LISTE VILLES ========== */
 t_ville_elt *supprimerVille (t_ville_elt *liste, char* ville){
     /// A FAIRE
+    return liste;
 }
 
 
@@ -274,6 +275,15 @@ t_vaccin_elt *fusionnerStocks(t_vaccin_elt *vaccinA, t_vaccin_elt *vaccinB){
     // TODO : ECRIRE ICI LE CODE DE CETTE FONCTION
 }
 
+bool testSemaine (int semaine, int nb_vaccins){
+    if ((semaine<1 && semaine>53) && (nb_vaccins <0)) {
+        printf("Le nombre de semaines doit être compris entre 1 et 53 !");
+        printf("Le nombre de vaccins doit être strictement positif !");
+        return 1;
+    }
+    else
+        return 0;
+}
 
 /* ----------------------------------
  *   UTILITAIRES
@@ -285,13 +295,4 @@ void viderBuffer (){
     } while (c != '\n' && c != EOF);
 }
 
-bool testSemaine (int semaine, int nb_vaccins){
-    if ((semaine<1 && semaine>53) && (nb_vaccins <0)) {
-        printf("Le nombre de semaines doit être compris entre 1 et 53 !");
-        printf("Le nombre de vaccins doit être strictement positif !");
-        return 1;
-    }
-    else
-        return 0;
-}
 

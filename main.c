@@ -1,21 +1,14 @@
-//
-//  main.c
-//  TP3_NF16
-//
-//  Created by Nada Slimani on 01/04/2021.
-//
-
 #include <stdio.h>
 #include <stdlib.h>
 #include "TP3.h"
 
 int main()
 {
-    t_vaccin_elt *GESTION_VACCINS[10] = {NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL};
+    //t_vaccin_elt *GESTION_VACCINS[10] = {NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL};
 
     char choix = '0';
     while (choix != '7') {
-           
+
         printf("=================================================================================\n");
         printf("||    Bienvenu au menu principal d'une application d'ordonnancement medicale   ||\n");
         printf("=================================================================================\n");
@@ -27,7 +20,7 @@ int main()
         printf("||  6. Fusionner deux stocks.                                                  ||\n");
         printf("||  7. Quitter.                                                                ||\n");
         printf("=================================================================================\n\n");
-            
+
         printf("\n   Votre choix ? ");
         choix = getchar();
         viderBuffer();
@@ -44,7 +37,7 @@ int main()
             case '3' :
                 // TODO : menu 3
             break;
-                
+
             case '4' :
                 // TODO : menu 4
             break;
@@ -62,7 +55,7 @@ int main()
             break;
 
             default :
-                printf("\n\nERREUR : votre choix n'est valide ! ");
+                printf("\n\nERREUR : votre choix n'est pas valide ! ");
 
             }
             printf("\n\n\n");
