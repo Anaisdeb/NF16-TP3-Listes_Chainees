@@ -15,7 +15,7 @@ int main()
     while (choix != '7') {
 
         printf("=================================================================================\n");
-        printf("||    Bienvenu au menu principal d'une application d'ordonnancement medicale   ||\n");
+        printf("||    Bienvenu au menu principal                                               ||\n");
         printf("=================================================================================\n");
         printf("||  1. Initialiser la liste des marques de vaccin disponibles.                 ||\n");
         printf("||  2. Ajouter et planifier un stock.                                          ||\n");
@@ -59,7 +59,7 @@ int main()
                     scanf("%d", &semaine);
                     printf("Veuillez entrer le nombre de vaccins a ajouter au stock.\n");
                     scanf("%d", &quantite);
-                    vaccin->villes_dispo=ajouterVaccinV(vaccin->villes_dispo, ville, semaine, quantite);
+                    vaccin->villes_dispo=ajouterVaccinV(vaccin->villes_dispo, ville, semaine, quantite);;
                     break;
                 }
 

@@ -26,7 +26,7 @@ t_ville_elt *creerVille(char *ville){
     t_ville_elt *nouvelleVille = malloc(sizeof(t_ville_elt));
     if (nouvelleVille == NULL) {exit(EXIT_FAILURE);}
 
-    nouvelleVille->nom_ville = ville;
+    nouvelleVille->nom_ville = strdup(ville); // strdup est important pour copier le nom et non attribuer le pointeur !
     nouvelleVille->suivant = NULL;
     nouvelleVille->semaines_planifiees = NULL;
     nouvelleVille->nombre_vaccins_total = 0;
@@ -202,7 +202,7 @@ t_ville_elt *ajouterVaccinV(t_ville_elt *liste, char* ville, int semaine, int nb
         return liste;
     }
     t_ville_elt *header = liste;
-    while (header->suivant!=NULL && header->nom_ville!=ville){
+    while (header!=NULL && header->nom_ville!=ville){ // header!=NULL et non header->suivant !!
         header=header->suivant;
     }
 
