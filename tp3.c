@@ -1,6 +1,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <stdbool.h>
+#include <string.h>
 #include "tp3.h"
 
 /* ========== CREER SEMAINE ========== */
@@ -41,7 +42,7 @@ t_vaccin_elt *creerVaccin(char *marque){
     t_vaccin_elt *nouveauVaccin = malloc(sizeof(t_vaccin_elt));
     if (nouveauVaccin == NULL) {exit(EXIT_FAILURE);}
 
-    nouveauVaccin->marque = marque;
+    nouveauVaccin->marque = strdup(marque); // strdup !!
     nouveauVaccin->villes_dispo = NULL;
 
     return nouveauVaccin;
@@ -52,10 +53,12 @@ t_vaccin_elt *creerVaccin(char *marque){
 /* ========== AJOUT SEMAINE DANS LISTE SEMAINES ========== */
 t_semaine_elt *ajouterSemaine (t_semaine_elt *liste, t_semaine_elt *semaine){
 
-    if (testSemaine(semaine->numero_semaine, semaine->nombre_vaccins) == 0){
+    ///ERREUR
+    /*if (testSemaine(semaine->numero_semaine, semaine->nombre_vaccins) == 0){
         {exit(EXIT_FAILURE);}
     }
-    else {
+    else {*/
+        printf("erreur là ici");
         // si liste vide ou élément à ajouter en tête de liste
         if (liste == NULL || semaine->numero_semaine <= liste->numero_semaine){
             semaine->suivant = liste;
@@ -75,7 +78,7 @@ t_semaine_elt *ajouterSemaine (t_semaine_elt *liste, t_semaine_elt *semaine){
             semaine->suivant = header;
         }
         return liste;
-    }
+    //}
 }
 
 /* ========== AJOUT VILLE DANS LISTE VILLES ========== */
@@ -156,7 +159,8 @@ t_semaine_elt *ajouterVaccinS(t_semaine_elt *liste, int semaine, int nb_vaccins)
         if (header->numero_semaine == semaine)
             header->nombre_vaccins += nb_vaccins;
         else
-          ajouterSemaine(liste, creerSemaine(semaine, nb_vaccins));
+            printf("erreur là ici");
+          liste=ajouterSemaine(liste, creerSemaine(semaine, nb_vaccins));
     //}
     return liste;
 }
@@ -202,7 +206,7 @@ t_ville_elt *ajouterVaccinV(t_ville_elt *liste, char* ville, int semaine, int nb
         return liste;
     }
     t_ville_elt *header = liste;
-    while (header!=NULL && header->nom_ville!=ville){ // header!=NULL et non header->suivant !!
+    while (header!=NULL && *header->nom_ville!=*ville){ // header et non header->suivant !!
         header=header->suivant;
     }
 
@@ -211,7 +215,7 @@ t_ville_elt *ajouterVaccinV(t_ville_elt *liste, char* ville, int semaine, int nb
         return liste;
     }
     else {
-        ajouterVaccinS(header->semaines_planifiees, semaine, nb_vaccins);
+        liste->semaines_planifiees = ajouterVaccinS(header->semaines_planifiees, semaine, nb_vaccins); // Ne pas oublier de récupérer l'élément renvoyé
     }
     return liste;
     //return trierVilles(liste);
@@ -350,10 +354,10 @@ bool testSemaine (int semaine, int nb_vaccins){
 
 t_vaccin_elt *rechercheTableau(char *marqueV, t_vaccin_elt *GESTION_VACCINS[10]){
     int i = 0;
-    while (i < 10 && marqueV != GESTION_VACCINS[i]->marque) {
+    while (i < 10 && *marqueV != *GESTION_VACCINS[i]->marque) { // * car on compare les valeurs pointées !
       i++;
     }
-    if (marqueV == GESTION_VACCINS[i]->marque) {
+    if (*marqueV == *GESTION_VACCINS[i]->marque) {
       return GESTION_VACCINS[i];
     }
     else {

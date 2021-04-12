@@ -40,7 +40,7 @@ int main()
                     scanf("%124s", marqueV);
                     t_vaccin_elt* nouveau_vaccin = creerVaccin(marqueV);
                     GESTION_VACCINS[instance] = nouveau_vaccin;
-                    printf("Le vaccin %s est initialise ! \n",marqueV);
+                    printf("Le vaccin %s est initialise ! \n",GESTION_VACCINS[instance]->marque);
                     instance += 1;
                     printf("Il y a %d vaccins \n", instance);
                 }
@@ -59,7 +59,7 @@ int main()
                     scanf("%d", &semaine);
                     printf("Veuillez entrer le nombre de vaccins a ajouter au stock.\n");
                     scanf("%d", &quantite);
-                    vaccin->villes_dispo=ajouterVaccinV(vaccin->villes_dispo, ville, semaine, quantite);;
+                    vaccin->villes_dispo=ajouterVaccinV(vaccin->villes_dispo, ville, semaine, quantite);
                     break;
                 }
 
