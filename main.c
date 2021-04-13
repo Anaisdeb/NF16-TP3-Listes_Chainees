@@ -32,8 +32,8 @@ int main()
 
         switch (choix) {
             case '1' :
-                if (instance >10){
-                    printf("La liste de vaccin est complète. Veuillez en supprimer un pour en ajouter un nouveau.");
+                if (instance == 10){
+                    printf("La liste de vaccin est complete. Veuillez en supprimer un pour en ajouter un nouveau.");
                 }
                 else {
                     printf("Veuillez entrer un nom de vaccin.\n");
@@ -42,7 +42,10 @@ int main()
                     GESTION_VACCINS[instance] = nouveau_vaccin;
                     printf("Le vaccin %s est initialise ! \n",GESTION_VACCINS[instance]->marque);
                     instance += 1;
-                    printf("Il y a %d vaccins \n", instance);
+                    printf("Voici le(s) %d vaccin(s) initialise(s) : \n", instance);
+                    for (int i=0; i<instance; i++) {
+                        printf("[%s]\t",GESTION_VACCINS[i]->marque);
+                    }
                 }
             break;
 
@@ -70,6 +73,7 @@ int main()
             case '4' :
                 printf("Veuillez entrer la marque du vaccin.\n");
                 scanf("%s", marqueV);
+                printf("\n");
                 vaccin = rechercheTableau(marqueV, GESTION_VACCINS);
                 if (vaccin==NULL)
                     break;

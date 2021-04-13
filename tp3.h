@@ -43,6 +43,7 @@ t_ville_elt *ajouterVille (t_ville_elt *liste, t_ville_elt *ville, t_semaine_elt
 t_semaine_elt *supprimerSemaine (t_semaine_elt *liste, int semaine);
 t_ville_elt *supprimerVille (t_ville_elt *liste, char* ville);
 bool testSemaine (int semaine, int nb_vaccins);
+t_vaccin_elt *rechercheTableau(char *marqueV, t_vaccin_elt *GESTION_VACCINS[10]);
 t_ville_elt* trierVilles (t_ville_elt *liste);
 
 /* ------- UTILITAIRES ------------ */

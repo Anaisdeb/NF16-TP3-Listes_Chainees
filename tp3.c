@@ -58,7 +58,6 @@ t_semaine_elt *ajouterSemaine (t_semaine_elt *liste, t_semaine_elt *semaine){
         {exit(EXIT_FAILURE);}
     }
     else {*/
-        printf("erreur là ici");
         // si liste vide ou élément à ajouter en tête de liste
         if (liste == NULL || semaine->numero_semaine <= liste->numero_semaine){
             semaine->suivant = liste;
@@ -88,7 +87,7 @@ t_ville_elt *ajouterVille (t_ville_elt *liste, t_ville_elt *ville, t_semaine_elt
     ville -> suivant = liste;
     ville -> semaines_planifiees = l_semaine;
     liste = ville; // nouvelle tête de liste
-
+    printf("Ajout d'une ville %s", liste->nom_ville);
     /// ERREUR ICI
     //return trierVilles(liste);
     return liste;
@@ -153,14 +152,14 @@ t_semaine_elt *ajouterVaccinS(t_semaine_elt *liste, int semaine, int nb_vaccins)
             return creerSemaine(semaine, nb_vaccins);
         }
         // On s'arrête quand on a trouvé ou quand le numéro de la semaine à chercher devient inférieur à numero_semaine car c'est ordonné donc impossible de trouver dans les prochaines itérations.
-        while (header->numero_semaine!=semaine && header->numero_semaine < semaine && header!=NULL) {
+        while (header->numero_semaine!=semaine  && header->numero_semaine < semaine && header->suivant!=NULL) { // header->suivant et non header !
                header=header->suivant;
         }
         if (header->numero_semaine == semaine)
             header->nombre_vaccins += nb_vaccins;
-        else
-            printf("erreur là ici");
+        else {
           liste=ajouterSemaine(liste, creerSemaine(semaine, nb_vaccins));
+        }
     //}
     return liste;
 }
@@ -215,7 +214,7 @@ t_ville_elt *ajouterVaccinV(t_ville_elt *liste, char* ville, int semaine, int nb
         return liste;
     }
     else {
-        liste->semaines_planifiees = ajouterVaccinS(header->semaines_planifiees, semaine, nb_vaccins); // Ne pas oublier de récupérer l'élément renvoyé
+        header->semaines_planifiees = ajouterVaccinS(header->semaines_planifiees, semaine, nb_vaccins); // Ne pas oublier de récupérer l'élément renvoyé
     }
     return liste;
     //return trierVilles(liste);
