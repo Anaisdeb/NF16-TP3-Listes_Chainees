@@ -42,12 +42,18 @@ t_semaine_elt *ajouterSemaine (t_semaine_elt *liste, t_semaine_elt *semaine);
 t_ville_elt *ajouterVille (t_ville_elt *liste, t_ville_elt *ville, t_semaine_elt *l_semaine);
 t_semaine_elt *supprimerSemaine (t_semaine_elt *liste, int semaine);
 t_ville_elt *supprimerVille (t_ville_elt *liste, char* ville);
-bool testSemaine (int semaine, int nb_vaccins);
-t_vaccin_elt *rechercheTableau(char *marqueV, t_vaccin_elt *GESTION_VACCINS[10], int instance);
 t_ville_elt* trierVilles (t_ville_elt *liste);
 
 /* ------- UTILITAIRES ------------ */
 void viderBuffer ();
+bool testSemaine (int semaine, int nb_vaccins);
+t_vaccin_elt *rechercheTableau(char *marqueV, t_vaccin_elt *GESTION_VACCINS[10], int instance);
+void desallouerVaccin (t_vaccin_elt**ElementSup);
+void desallouerVille (t_ville_elt**ElementSup);
+void desallouerSemaine (t_semaine_elt**ElementSup);
+void desallouerListeVaccin (t_vaccin_elt**GESTION_VACCINS, int instance);
+void desallouerListeVille (t_ville_elt**ElementPrem);
+void desallouerListeSem (t_semaine_elt**ElementPrem);
 
 
 #endif // TP3_H_INCLUDED

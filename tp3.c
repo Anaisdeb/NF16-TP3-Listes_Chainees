@@ -299,7 +299,8 @@ t_ville_elt *deduireVaccinV(t_ville_elt *liste, char* ville, int semaine, int nb
         printf("La ville n'existe pas.");
         return liste;
     }
-    return trierVilles(liste);
+    return liste;
+    //return trierVilles(liste);
 }
 
 /* ========== AFFICHER STOCK D'UN VACCIN ========== */
@@ -343,15 +344,18 @@ t_vaccin_elt *fusionnerStocks(t_vaccin_elt *vaccinA, t_vaccin_elt *vaccinB){
     // TODO : ECRIRE ICI LE CODE DE CETTE FONCTION
 }
 
-bool testSemaine (int semaine, int nb_vaccins){
-    if ((semaine<1 && semaine>53) && (nb_vaccins <0)) {
-        printf("Le nombre de semaines doit être compris entre 1 et 53 !");
-        printf("Le nombre de vaccins doit être strictement positif !");
-        return 1;
-    }
-    else
-        return 0;
+
+/* ----------------------------------
+ *   UTILITAIRES
+ ---------------------------------- */
+void viderBuffer (){
+    char c;
+    do {
+        c = getchar();
+    } while (c != '\n' && c != EOF);
 }
+
+
 
 t_vaccin_elt *rechercheTableau(char *marqueV, t_vaccin_elt *GESTION_VACCINS[10], int instance){
     int i = 0;
@@ -367,14 +371,73 @@ t_vaccin_elt *rechercheTableau(char *marqueV, t_vaccin_elt *GESTION_VACCINS[10],
     }
 }
 
-/* ----------------------------------
- *   UTILITAIRES
- ---------------------------------- */
-void viderBuffer (){
-    char c;
-    do {
-        c = getchar();
-    } while (c != '\n' && c != EOF);
+
+
+bool testSemaine (int semaine, int nb_vaccins){
+    if ((semaine<1 && semaine>53) && (nb_vaccins <0)) {
+        printf("Le nombre de semaines doit être compris entre 1 et 53 !");
+        printf("Le nombre de vaccins doit être strictement positif !");
+        return 1;
+    }
+    else
+        return 0;
 }
 
+
+
+void desallouerVaccin (t_vaccin_elt **ElementSup) {
+    free ((*ElementSup)->marque);
+    free ((*ElementSup)->villes_dispo);
+    free (*ElementSup);
+}
+
+
+
+void desallouerVille (t_ville_elt **ElementSup) {
+    free ((*ElementSup)->nom_ville);
+    free ((*ElementSup)->semaines_planifiees);
+    free (*ElementSup);
+}
+
+
+
+void desallouerSemaine (t_semaine_elt **ElementSup) {
+    free (*ElementSup);
+}
+
+
+
+void desallouerListeVaccin (t_vaccin_elt**GESTION_VACCINS, int instance) {
+    for (int i=0; i<instance; i++){
+        desallouerListeVille(&GESTION_VACCINS[i]->villes_dispo);
+        desallouerVaccin(&GESTION_VACCINS[i]);
+    }
+    free(GESTION_VACCINS);
+    GESTION_VACCINS=NULL;
+}
+
+
+
+void desallouerListeVille (t_ville_elt**ElementPrem) {
+    t_ville_elt *n;
+    while(*ElementPrem!=NULL){
+        desallouerListeSem(&(*ElementPrem)->semaines_planifiees);
+        n=*ElementPrem;
+        *ElementPrem=(*ElementPrem)->suivant;
+        desallouerVille(&n);
+    }
+    *ElementPrem=NULL;
+}
+
+
+
+void desallouerListeSem (t_semaine_elt**ElementPrem) {
+    t_semaine_elt *n;
+    while(*ElementPrem!=NULL){
+        n=*ElementPrem;
+        *ElementPrem=(*ElementPrem)->suivant;
+        desallouerSemaine(&n);
+    }
+    *ElementPrem=NULL;
+}
 
