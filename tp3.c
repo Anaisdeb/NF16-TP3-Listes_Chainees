@@ -87,7 +87,7 @@ t_ville_elt *ajouterVille (t_ville_elt *liste, t_ville_elt *ville, t_semaine_elt
     ville -> suivant = liste;
     ville -> semaines_planifiees = l_semaine;
     liste = ville; // nouvelle tête de liste
-    printf("Ajout d'une ville %s", liste->nom_ville);
+    printf("\nLa ville %s est ajoutee.\n", liste->nom_ville);
     /// ERREUR ICI
     //return trierVilles(liste);
     return liste;
@@ -201,24 +201,21 @@ t_semaine_elt *deduireVaccinS(t_semaine_elt *liste, int semaine, int nb_vaccins)
 /// ERREUR ICI
 t_ville_elt *ajouterVaccinV(t_ville_elt *liste, char* ville, int semaine, int nb_vaccins){
 
+    char *nomV = strdup(ville);
     if (liste == NULL){
         liste = ajouterVille(liste, creerVille(ville), creerSemaine(semaine, nb_vaccins));
         return liste;
     }
-    printf("hello voici la ville a ajouter : %s \n", ville);
-    printf("hello voici la tete de liste de ville : %s \n", liste->nom_ville);
     t_ville_elt *header = liste;
-    while (header!=NULL && *header->nom_ville!=*ville){ // header et non header->suivant !!
+    while (header!=NULL && strcmp(header->nom_ville,ville)!=0 ){ // strcmp permet de comparer deux chaînes de caractères
         printf("%s \n", header->nom_ville);
         header=header->suivant;
     }
     if (header == NULL){ // On crée la ville
-        printf("On ajoute cette ville : %s \n", ville);
         liste = ajouterVille(liste, creerVille(ville), creerSemaine(semaine, nb_vaccins));
         return liste;
     }
     else {
-        printf("hello voici la ville a ajouter : %s \n", header->nom_ville);
         header->semaines_planifiees = ajouterVaccinS(header->semaines_planifiees, semaine, nb_vaccins); // Ne pas oublier de récupérer l'élément renvoyé
     }
     return liste;
@@ -358,15 +355,14 @@ bool testSemaine (int semaine, int nb_vaccins){
 
 t_vaccin_elt *rechercheTableau(char *marqueV, t_vaccin_elt *GESTION_VACCINS[10], int instance){
     int i = 0;
-    while (i < instance-1 && *marqueV != *GESTION_VACCINS[i]->marque) { // * car on compare les valeurs pointées !
-      printf("%s", GESTION_VACCINS[i]->marque);
+    while (i < instance-1 && strcmp(marqueV,GESTION_VACCINS[i]->marque)!=0) { // * car on compare les valeurs pointées !
       i++;
     }
-    if (*marqueV == *GESTION_VACCINS[i]->marque) {
+    if (strcmp(marqueV,GESTION_VACCINS[i]->marque)==0) {
       return GESTION_VACCINS[i];
     }
     else {
-      printf("Vaccin non trouve. Veuillez le créer.");
+      printf("Vaccin non trouve. Veuillez le creer.");
       return NULL;
     }
 }

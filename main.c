@@ -40,9 +40,9 @@ int main()
                     scanf("%124s", marqueV);
                     t_vaccin_elt* nouveau_vaccin = creerVaccin(marqueV);
                     GESTION_VACCINS[instance] = nouveau_vaccin;
-                    printf("Le vaccin %s est initialise ! \n",GESTION_VACCINS[instance]->marque);
+                    printf("Le vaccin %s est initialise ! \n\n",GESTION_VACCINS[instance]->marque);
                     instance += 1;
-                    printf("Voici le(s) %d vaccin(s) initialise(s) : \n", instance);
+                    printf("%d vaccin(s) disponible(s) : \n", instance);
                     for (int i=0; i<instance; i++) {
                         printf("[%s]\t",GESTION_VACCINS[i]->marque);
                     }
@@ -50,6 +50,7 @@ int main()
             break;
 
             case '2' :
+
                 printf("Veuillez entrer la marque du vaccin.\n");
                 scanf("%s", marqueV);
                 t_vaccin_elt* vaccin = rechercheTableau(marqueV, GESTION_VACCINS, instance);
@@ -96,7 +97,6 @@ int main()
 
             default :
                 printf("\n\nERREUR : votre choix n'est pas valide ! ");
-
             }
             printf("\n\n\n");
             viderBuffer();
