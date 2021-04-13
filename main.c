@@ -78,7 +78,7 @@ int main()
                     scanf("%124s", ville);
                     printf("Veuillez entrer le numero de la semaine dans laquelle ajouter le stock.\n");
                     scanf("%d", &semaine);
-                    printf("Veuillez entrer le nombre de vaccins a ajouter au stock.\n");
+                    printf("Veuillez entrer le nombre de vaccins a deduire au stock.\n");
                     scanf("%d", &quantite);
                     vaccin->villes_dispo=deduireVaccinV(vaccin->villes_dispo, ville, semaine, quantite);
                     break;

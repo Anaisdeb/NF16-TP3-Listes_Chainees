@@ -97,10 +97,10 @@ t_ville_elt *ajouterVille (t_ville_elt *liste, t_ville_elt *ville, t_semaine_elt
 /* ========== SUPPRIMER SEMAINE DANS LISTE SEMAINES ========== */
 t_semaine_elt *supprimerSemaine (t_semaine_elt *liste, int semaine){
 
-    if (testSemaine(semaine, 0) == 0){
+    /*if (testSemaine(semaine, 0) == 0){
         {exit(EXIT_FAILURE);}
     }
-    else {
+    else {*/
         t_semaine_elt *header = liste;
         if (liste == NULL){
             printf("La liste de semaines est vide");
@@ -109,7 +109,7 @@ t_semaine_elt *supprimerSemaine (t_semaine_elt *liste, int semaine){
         if (liste->numero_semaine==semaine){ // si on supprime le premier élément de la liste
                 header = liste;
                 liste = liste->suivant;
-                free(header);
+                desallouerSemaine(&header);
             }
             else {
                 t_semaine_elt *parent = liste;
@@ -119,22 +119,48 @@ t_semaine_elt *supprimerSemaine (t_semaine_elt *liste, int semaine){
                 }
                 if (header->numero_semaine == semaine){
                     parent->suivant = header->suivant;
-                    free(header);
+                    desallouerSemaine(&header);
                     header = NULL;
                 }
                 else {
                         printf("La semaine n'existe pas");
                         return liste;
                 }
-            }
+            //}
     }
     return liste;
+
 }
 
 
 /* ========== SUPPRIMER VILLE DANS LISTE VILLES ========== */
 t_ville_elt *supprimerVille (t_ville_elt *liste, char* ville){
-    /// A FAIRE
+    t_ville_elt *header = liste;
+        if (liste == NULL){
+            printf("La liste de semaines est vide");
+            return liste;
+        }
+        if (strcmp(header->nom_ville,ville)==0){ // si on supprime le premier élément de la liste
+                header = liste;
+                liste = liste->suivant;
+                desallouerVille(&header);
+            }
+            else {
+                t_ville_elt *parent = liste;
+                while (strcmp(header->nom_ville,ville)!=0 && header!=NULL) {
+                       parent = header;
+                       header = header->suivant;
+                }
+                if (strcmp(header->nom_ville,ville)==0){
+                    parent->suivant = header->suivant;
+                    desallouerVille(&header);
+                    header = NULL;
+                }
+                else {
+                        printf("La ville n'existe pas");
+                        return liste;
+                }
+    }
     return liste;
 }
 
@@ -169,10 +195,10 @@ t_semaine_elt *ajouterVaccinS(t_semaine_elt *liste, int semaine, int nb_vaccins)
 
 /* ========== RETRAIT NB VACCIN DE LISTE SEMAINES ========== */
 t_semaine_elt *deduireVaccinS(t_semaine_elt *liste, int semaine, int nb_vaccins){
-    if (testSemaine(semaine, nb_vaccins) == 0){
+    /*if (testSemaine(semaine, nb_vaccins) == 0){
         {exit(EXIT_FAILURE);}
     }
-    else {
+    else {*/
         t_semaine_elt *header = liste;
         if (liste == NULL){
             printf("La liste est vide");
@@ -181,17 +207,22 @@ t_semaine_elt *deduireVaccinS(t_semaine_elt *liste, int semaine, int nb_vaccins)
         while (header->numero_semaine!=semaine && header->numero_semaine < semaine && header!=NULL) {
                header=header->suivant;
         }
-        if (header->numero_semaine == semaine)
+        if (header->numero_semaine == semaine){
             if (header->nombre_vaccins < nb_vaccins)
                 printf("Impossible. Veuillez saisir un nombre de vaccins inferieur ou egal au nombre disponible : %d", header->nombre_vaccins);
+            else {
+                    printf("%d", header->nombre_vaccins);
             header->nombre_vaccins -= nb_vaccins;
+            printf("%d", header->nombre_vaccins);
             if (header->nombre_vaccins == 0)
                 supprimerSemaine(liste, semaine);
+            }
+        }
         else {
                 printf("La semaine n'existe pas");
                 return liste;
         }
-    }
+    //}
     return liste;
 }
 
@@ -277,27 +308,28 @@ t_ville_elt* trierVilles (t_ville_elt *liste){
 
 /* ========== RETRAIT NB VACCIN DE LISTE VILLES ========== */
 t_ville_elt *deduireVaccinV(t_ville_elt *liste, char* ville, int semaine, int nb_vaccins){
-    t_ville_elt *header = liste;
+
     if (liste == NULL){
         printf("La liste de villes est vide");
         return liste;
     }
-    while (header->nom_ville!=ville && header->suivant!=NULL){
+    t_ville_elt *header = liste;
+    while (header!=NULL && strcmp(header->nom_ville,ville)!=0 ){
         header=header->suivant;
     }
-
-    if (header->nom_ville == ville){
-        if(header->nombre_vaccins_total < nb_vaccins){
+    if (strcmp(header->nom_ville,ville)==0){
+        /*if(header->nombre_vaccins_total < nb_vaccins){
             printf("Impossible. Veuillez saisir un nombre de vaccins inferieur ou egal au nombre total disponible : %d", header->nombre_vaccins_total);
-            deduireVaccinS(liste->semaines_planifiees, semaine, nb_vaccins);
         }
-        // Cas où la ville n'a plus de vaccins
-        if (header->nombre_vaccins_total == 0)
-            liste = supprimerVille(liste, ville);
+        else {*/
+                deduireVaccinS(liste->semaines_planifiees, semaine, nb_vaccins);
+            // Cas où la ville n'a plus de vaccins
+            /*if (header->nombre_vaccins_total == 0)
+                liste = supprimerVille(liste, ville);*/
+        //}
     }
     else {
         printf("La ville n'existe pas.");
-        return liste;
     }
     return liste;
     //return trierVilles(liste);
@@ -385,11 +417,7 @@ bool testSemaine (int semaine, int nb_vaccins){
 
 
 
-<<<<<<< HEAD
 void desallouerVaccin (t_vaccin_elt **ElementSup) {
-=======
-void desallouerVaccin (t_vaccin_elt**ElementSup) {
->>>>>>> 1ce4180bb393fcaf02e0da9343ade3e45e535a96
     free ((*ElementSup)->marque);
     free ((*ElementSup)->villes_dispo);
     free (*ElementSup);
@@ -397,11 +425,8 @@ void desallouerVaccin (t_vaccin_elt**ElementSup) {
 
 
 
-<<<<<<< HEAD
+
 void desallouerVille (t_ville_elt **ElementSup) {
-=======
-void desallouerVille (t_ville_elt**ElementSup) {
->>>>>>> 1ce4180bb393fcaf02e0da9343ade3e45e535a96
     free ((*ElementSup)->nom_ville);
     free ((*ElementSup)->semaines_planifiees);
     free (*ElementSup);
@@ -409,11 +434,7 @@ void desallouerVille (t_ville_elt**ElementSup) {
 
 
 
-<<<<<<< HEAD
-void desallouerSemaine (t_semaine_elt **ElementSup) {
-=======
 void desallouerSemaine (t_semaine_elt**ElementSup) {
->>>>>>> 1ce4180bb393fcaf02e0da9343ade3e45e535a96
     free (*ElementSup);
 }
 
