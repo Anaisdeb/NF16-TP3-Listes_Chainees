@@ -198,22 +198,27 @@ t_semaine_elt *deduireVaccinS(t_semaine_elt *liste, int semaine, int nb_vaccins)
 
 
 /* ========== AJOUT NB VACCIN DANS LISTE VILLES ========== */
+/// ERREUR ICI
 t_ville_elt *ajouterVaccinV(t_ville_elt *liste, char* ville, int semaine, int nb_vaccins){
 
     if (liste == NULL){
         liste = ajouterVille(liste, creerVille(ville), creerSemaine(semaine, nb_vaccins));
         return liste;
     }
+    printf("hello voici la ville a ajouter : %s \n", ville);
+    printf("hello voici la tete de liste de ville : %s \n", liste->nom_ville);
     t_ville_elt *header = liste;
     while (header!=NULL && *header->nom_ville!=*ville){ // header et non header->suivant !!
+        printf("%s \n", header->nom_ville);
         header=header->suivant;
     }
-
     if (header == NULL){ // On crée la ville
+        printf("On ajoute cette ville : %s \n", ville);
         liste = ajouterVille(liste, creerVille(ville), creerSemaine(semaine, nb_vaccins));
         return liste;
     }
     else {
+        printf("hello voici la ville a ajouter : %s \n", header->nom_ville);
         header->semaines_planifiees = ajouterVaccinS(header->semaines_planifiees, semaine, nb_vaccins); // Ne pas oublier de récupérer l'élément renvoyé
     }
     return liste;
@@ -351,16 +356,17 @@ bool testSemaine (int semaine, int nb_vaccins){
         return 0;
 }
 
-t_vaccin_elt *rechercheTableau(char *marqueV, t_vaccin_elt *GESTION_VACCINS[10]){
+t_vaccin_elt *rechercheTableau(char *marqueV, t_vaccin_elt *GESTION_VACCINS[10], int instance){
     int i = 0;
-    while (i < 10 && *marqueV != *GESTION_VACCINS[i]->marque) { // * car on compare les valeurs pointées !
+    while (i < instance-1 && *marqueV != *GESTION_VACCINS[i]->marque) { // * car on compare les valeurs pointées !
+      printf("%s", GESTION_VACCINS[i]->marque);
       i++;
     }
     if (*marqueV == *GESTION_VACCINS[i]->marque) {
       return GESTION_VACCINS[i];
     }
     else {
-      printf("Vaccin non trouve");
+      printf("Vaccin non trouve. Veuillez le créer.");
       return NULL;
     }
 }

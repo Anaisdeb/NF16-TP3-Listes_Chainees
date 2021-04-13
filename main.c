@@ -52,7 +52,7 @@ int main()
             case '2' :
                 printf("Veuillez entrer la marque du vaccin.\n");
                 scanf("%s", marqueV);
-                t_vaccin_elt* vaccin = rechercheTableau(marqueV, GESTION_VACCINS);
+                t_vaccin_elt* vaccin = rechercheTableau(marqueV, GESTION_VACCINS, instance);
                 if (vaccin==NULL)
                     break;
                 else{
@@ -74,7 +74,7 @@ int main()
                 printf("Veuillez entrer la marque du vaccin.\n");
                 scanf("%s", marqueV);
                 printf("\n");
-                vaccin = rechercheTableau(marqueV, GESTION_VACCINS);
+                vaccin = rechercheTableau(marqueV, GESTION_VACCINS, instance);
                 if (vaccin==NULL)
                     break;
                 else {
