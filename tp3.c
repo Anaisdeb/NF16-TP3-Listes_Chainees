@@ -385,7 +385,11 @@ bool testSemaine (int semaine, int nb_vaccins){
 
 
 
+<<<<<<< HEAD
 void desallouerVaccin (t_vaccin_elt **ElementSup) {
+=======
+void desallouerVaccin (t_vaccin_elt**ElementSup) {
+>>>>>>> 1ce4180bb393fcaf02e0da9343ade3e45e535a96
     free ((*ElementSup)->marque);
     free ((*ElementSup)->villes_dispo);
     free (*ElementSup);
@@ -393,7 +397,11 @@ void desallouerVaccin (t_vaccin_elt **ElementSup) {
 
 
 
+<<<<<<< HEAD
 void desallouerVille (t_ville_elt **ElementSup) {
+=======
+void desallouerVille (t_ville_elt**ElementSup) {
+>>>>>>> 1ce4180bb393fcaf02e0da9343ade3e45e535a96
     free ((*ElementSup)->nom_ville);
     free ((*ElementSup)->semaines_planifiees);
     free (*ElementSup);
@@ -401,7 +409,11 @@ void desallouerVille (t_ville_elt **ElementSup) {
 
 
 
+<<<<<<< HEAD
 void desallouerSemaine (t_semaine_elt **ElementSup) {
+=======
+void desallouerSemaine (t_semaine_elt**ElementSup) {
+>>>>>>> 1ce4180bb393fcaf02e0da9343ade3e45e535a96
     free (*ElementSup);
 }
 
