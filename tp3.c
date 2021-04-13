@@ -198,17 +198,14 @@ t_semaine_elt *deduireVaccinS(t_semaine_elt *liste, int semaine, int nb_vaccins)
 
 
 /* ========== AJOUT NB VACCIN DANS LISTE VILLES ========== */
-/// ERREUR ICI
 t_ville_elt *ajouterVaccinV(t_ville_elt *liste, char* ville, int semaine, int nb_vaccins){
 
-    char *nomV = strdup(ville);
     if (liste == NULL){
         liste = ajouterVille(liste, creerVille(ville), creerSemaine(semaine, nb_vaccins));
         return liste;
     }
     t_ville_elt *header = liste;
     while (header!=NULL && strcmp(header->nom_ville,ville)!=0 ){ // strcmp permet de comparer deux chaînes de caractères
-        printf("%s \n", header->nom_ville);
         header=header->suivant;
     }
     if (header == NULL){ // On crée la ville
@@ -219,6 +216,7 @@ t_ville_elt *ajouterVaccinV(t_ville_elt *liste, char* ville, int semaine, int nb
         header->semaines_planifiees = ajouterVaccinS(header->semaines_planifiees, semaine, nb_vaccins); // Ne pas oublier de récupérer l'élément renvoyé
     }
     return liste;
+    /// ERREUR ICI
     //return trierVilles(liste);
 }
 
@@ -309,7 +307,7 @@ void afficherStock(t_vaccin_elt *vaccin){
     t_ville_elt *headerV = vaccin->villes_dispo;
     printf("%s : \n", vaccin->marque);
     while (headerV!=NULL){
-        printf("--- %s [Total = %d] \n", headerV->nom_ville, headerV->nombre_vaccins_total);
+        printf(" --- %s [Total = %d] \n", headerV->nom_ville, headerV->nombre_vaccins_total);
         t_semaine_elt *headerS = headerV->semaines_planifiees;
         while (headerS!=NULL){
             printf("\t --- semaine %d : %d \n", headerS->numero_semaine, headerS->nombre_vaccins);
@@ -323,12 +321,14 @@ void afficherStock(t_vaccin_elt *vaccin){
 /* ========== AFFICHER STOCK PLANIFIE D'UN VACCIN POUR UNE SEMAINE ========== */
 void afficherPlanification(t_vaccin_elt *vaccin, int semaine){
     t_ville_elt *headerV = vaccin->villes_dispo;
-    printf("%s :", vaccin->marque);
+    printf("%s : \n", vaccin->marque);
+    printf(" --- semaine %d \n", semaine);
     while (headerV!=NULL){
-        printf("--- %s [Total = %d] \n", headerV->nom_ville, headerV->nombre_vaccins_total);
         t_semaine_elt *headerS = headerV->semaines_planifiees;
-        while (headerS!=NULL && headerS->numero_semaine!=semaine){
-            printf("\t --- semaine %d : %d \n", headerS->numero_semaine, headerS->nombre_vaccins);
+        while (headerS!=NULL){
+            if(headerS->numero_semaine==semaine) {
+                printf("\t --- %s : %d \n", headerV->nom_ville, headerS->nombre_vaccins);
+            }
             headerS=headerS->suivant;
         }
         headerV=headerV->suivant;

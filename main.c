@@ -84,7 +84,18 @@ int main()
                 }
 
             case '5' :
-                // TODO : menu 5
+                printf("Veuillez entrer la marque du vaccin.\n");
+                scanf("%s", marqueV);
+                printf("Veuillez entrer la semaine.\n");
+                scanf("%d", &semaine);
+                printf("\n");
+                vaccin = rechercheTableau(marqueV, GESTION_VACCINS, instance);
+                if (vaccin==NULL)
+                    break;
+                else {
+                    afficherPlanification(vaccin,semaine);
+                    break;
+                }
             break;
 
             case '6' :
