@@ -385,28 +385,28 @@ t_vaccin_elt *fusionnerStocks(t_vaccin_elt *vaccinA, t_vaccin_elt *vaccinB){
     strcat(Nom,"_");
     strcat(Nom,vaccinB->marque);
     t_vaccin_elt *nouveau_vaccin = creerVaccin(Nom);
-    printf("Le nouveau vaccin %s est initialise", nouveau_vaccin->marque);
+    printf("\nLe nouveau vaccin %s est initialise", nouveau_vaccin->marque);
 
     // On copie VaccinA dans nouveauVaccin
-    t_ville_elt *headerV = vaccinA->villes_dispo;
-    while(headerV!=NULL){
-        t_semaine_elt *headerS = headerV->semaines_planifiees;
-        while(headerS!=NULL){
-            ajouterVaccinV(nouveau_vaccin->villes_dispo, headerV->nom_ville,headerS->numero_semaine, headerS->nombre_vaccins);
-            headerS=headerS->suivant;
+    t_ville_elt *headerVA = vaccinA->villes_dispo;
+    while(headerVA!=NULL){
+        t_semaine_elt *headerSA = headerVA->semaines_planifiees;
+        while(headerSA!=NULL){
+            nouveau_vaccin->villes_dispo=ajouterVaccinV(nouveau_vaccin->villes_dispo, headerVA->nom_ville,headerSA->numero_semaine, headerSA->nombre_vaccins);
+            headerSA=headerSA->suivant;
         }
-        headerV=headerV->suivant;
+        headerVA=headerVA->suivant;
     }
 
      // On ajoute VaccinB dans nouveauVaccin
-    headerV = vaccinB->villes_dispo;
-    while(headerV!=NULL){
-        t_semaine_elt *headerS = headerV->semaines_planifiees;
-        while(headerS!=NULL){
-            ajouterVaccinV(nouveau_vaccin->villes_dispo, headerV->nom_ville,headerS->numero_semaine, headerS->nombre_vaccins);
-            headerS=headerS->suivant;
+    t_ville_elt *headerVB = vaccinB->villes_dispo;
+    while(headerVB!=NULL){
+        t_semaine_elt *headerSB = headerVB->semaines_planifiees;
+        while(headerSB!=NULL){
+            nouveau_vaccin->villes_dispo=ajouterVaccinV(nouveau_vaccin->villes_dispo, headerVB->nom_ville, headerSB->numero_semaine, headerSB->nombre_vaccins);
+            headerSB=headerSB->suivant;
         }
-        headerV=headerV->suivant;
+        headerVB=headerVB->suivant;
     }
     return nouveau_vaccin;
 }
