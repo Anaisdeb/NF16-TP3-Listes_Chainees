@@ -6,6 +6,7 @@ int main()
 {
     t_vaccin_elt *GESTION_VACCINS[10] = {NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL};
     char marqueV[125];
+    char marqueV2[125];
     char ville[125];
     int instance=0;
     int semaine;
@@ -38,6 +39,10 @@ int main()
                 else {
                     printf("Veuillez entrer un nom de vaccin.\n");
                     scanf("%124s", marqueV);
+                    if (instance>0 && rechercheTableau(marqueV, GESTION_VACCINS, instance)!=NULL){
+                        printf("Le vaccin existe deja");
+                        break;
+                    }
                     t_vaccin_elt* nouveau_vaccin = creerVaccin(marqueV);
                     GESTION_VACCINS[instance] = nouveau_vaccin;
                     printf("Le vaccin %s est initialise ! \n\n",GESTION_VACCINS[instance]->marque);
@@ -76,7 +81,7 @@ int main()
                 else{
                     printf("Veuillez entrer la ville dans laquelle ajouter le stock.\n");
                     scanf("%124s", ville);
-                    printf("Veuillez entrer le numero de la semaine dans laquelle ajouter le stock.\n");
+                    printf("Veuillez entrer le numero de la semaine dans laquelle retirer le stock.\n");
                     scanf("%d", &semaine);
                     printf("Veuillez entrer le nombre de vaccins a deduire au stock.\n");
                     scanf("%d", &quantite);
@@ -112,7 +117,14 @@ int main()
             break;
 
             case '6' :
-                // TODO : menu 6
+                printf("Veuillez entrer la marque du vaccin A.\n");
+                scanf("%s", marqueV);
+                printf("Veuillez entrer la marque du vaccin B.\n");
+                scanf("%s", marqueV2);
+                t_vaccin_elt* vaccinA = rechercheTableau(marqueV, GESTION_VACCINS, instance);
+                t_vaccin_elt* vaccinB = rechercheTableau(marqueV2, GESTION_VACCINS, instance);
+                GESTION_VACCINS[instance] = fusionnerStocks(vaccinA, vaccinB);
+                instance+=1;
             break;
 
             case '7' :

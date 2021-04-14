@@ -211,9 +211,7 @@ t_semaine_elt *deduireVaccinS(t_semaine_elt *liste, int semaine, int nb_vaccins)
             if (header->nombre_vaccins < nb_vaccins)
                 printf("Impossible. Veuillez saisir un nombre de vaccins inferieur ou egal au nombre disponible : %d", header->nombre_vaccins);
             else {
-                    printf("%d", header->nombre_vaccins);
             header->nombre_vaccins -= nb_vaccins;
-            printf("%d", header->nombre_vaccins);
             if (header->nombre_vaccins == 0)
                 supprimerSemaine(liste, semaine);
             }
@@ -372,8 +370,45 @@ void afficherPlanification(t_vaccin_elt *vaccin, int semaine){
 
 /* ========== FUSION DEUX VACCINS ========== */
 t_vaccin_elt *fusionnerStocks(t_vaccin_elt *vaccinA, t_vaccin_elt *vaccinB){
-    return NULL;
-    // TODO : ECRIRE ICI LE CODE DE CETTE FONCTION
+    if(vaccinA==NULL)
+        return vaccinB;
+    if(vaccinB==NULL)
+        return vaccinA;
+    if (strcmp(vaccinA->marque,vaccinB->marque)==0){
+        printf("Il s'agit du meme vaccin. Nous ne pouvons pas fusionner les stocks.");
+        return vaccinA;
+    }
+    // VaccinA et VaccinB non vides et differents
+    //On crée le nom du nouveau vaccin
+    char *Nom = (char*)malloc(40);
+    strcpy(Nom,vaccinA->marque);
+    strcat(Nom,"_");
+    strcat(Nom,vaccinB->marque);
+    t_vaccin_elt *nouveau_vaccin = creerVaccin(Nom);
+    printf("Le nouveau vaccin %s est initialise", nouveau_vaccin->marque);
+
+    // On copie VaccinA dans nouveauVaccin
+    t_ville_elt *headerV = vaccinA->villes_dispo;
+    while(headerV!=NULL){
+        t_semaine_elt *headerS = headerV->semaines_planifiees;
+        while(headerS!=NULL){
+            ajouterVaccinV(nouveau_vaccin->villes_dispo, headerV->nom_ville,headerS->numero_semaine, headerS->nombre_vaccins);
+            headerS=headerS->suivant;
+        }
+        headerV=headerV->suivant;
+    }
+
+     // On ajoute VaccinB dans nouveauVaccin
+    headerV = vaccinB->villes_dispo;
+    while(headerV!=NULL){
+        t_semaine_elt *headerS = headerV->semaines_planifiees;
+        while(headerS!=NULL){
+            ajouterVaccinV(nouveau_vaccin->villes_dispo, headerV->nom_ville,headerS->numero_semaine, headerS->nombre_vaccins);
+            headerS=headerS->suivant;
+        }
+        headerV=headerV->suivant;
+    }
+    return nouveau_vaccin;
 }
 
 
