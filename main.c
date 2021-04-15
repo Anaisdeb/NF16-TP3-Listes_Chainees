@@ -97,6 +97,7 @@ int main()
                 if (vaccin==NULL)
                     break;
                 else {
+                    //vaccin->villes_dispo = trierVilles(vaccin->villes_dispo);
                     afficherStock(vaccin);
                     break;
                 }
@@ -124,6 +125,10 @@ int main()
                 t_vaccin_elt* vaccinA = rechercheTableau(marqueV, GESTION_VACCINS, instance);
                 t_vaccin_elt* vaccinB = rechercheTableau(marqueV2, GESTION_VACCINS, instance);
                 GESTION_VACCINS[instance] = fusionnerStocks(vaccinA, vaccinB);
+                if (instance>0 && rechercheTableau(marqueV, GESTION_VACCINS, instance)!=NULL){
+                        printf("Le vaccin existe deja");
+                        break;
+                }
                 instance+=1;
             break;
 

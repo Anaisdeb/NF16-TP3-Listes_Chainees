@@ -6,6 +6,9 @@
 
 /* ========== CREER SEMAINE ========== */
 t_semaine_elt *creerSemaine(int num_semaine, int nb_vaccins) {
+    if (testSemaine(num_semaine, nb_vaccins) == 0){
+        {exit(EXIT_FAILURE);}
+    }
     // Allouer de la mémoire pour la nouvelle semaine
     t_semaine_elt *nouvelleSemaine = malloc(sizeof(t_semaine_elt));
     // Si l'espace mémoire est insuffisant, un message d'erreur apparaît.
@@ -53,11 +56,10 @@ t_vaccin_elt *creerVaccin(char *marque){
 /* ========== AJOUT SEMAINE DANS LISTE SEMAINES ========== */
 t_semaine_elt *ajouterSemaine (t_semaine_elt *liste, t_semaine_elt *semaine){
 
-    ///ERREUR
-    /*if (testSemaine(semaine->numero_semaine, semaine->nombre_vaccins) == 0){
+    if (testSemaine(semaine->numero_semaine, semaine->nombre_vaccins) == 0){
         {exit(EXIT_FAILURE);}
     }
-    else {*/
+    else {
         // si liste vide ou élément à ajouter en tête de liste
         if (liste == NULL || semaine->numero_semaine <= liste->numero_semaine){
             semaine->suivant = liste;
@@ -77,30 +79,43 @@ t_semaine_elt *ajouterSemaine (t_semaine_elt *liste, t_semaine_elt *semaine){
             semaine->suivant = header;
         }
         return liste;
-    //}
+    }
 }
 
 /* ========== AJOUT VILLE DANS LISTE VILLES ========== */
 t_ville_elt *ajouterVille (t_ville_elt *liste, t_ville_elt *ville, t_semaine_elt *l_semaine) {
-
-    // Ajouter en tête de liste. Si liste vide on crée une nouvelle liste.
-    ville -> suivant = liste;
-    ville -> semaines_planifiees = l_semaine;
-    liste = ville; // nouvelle tête de liste
-    printf("\nLa ville %s est ajoutee.\n", liste->nom_ville);
-    /// ERREUR ICI
-    //return trierVilles(liste);
-    return liste;
+    // si liste vide ou élément à ajouter en tête de liste
+    if (liste == NULL || ville->nombre_vaccins_total <= liste->nombre_vaccins_total){
+        ville->suivant = liste;
+        liste = ville; //nouvelle tête de liste
+    }
+    else {//sinon chercher la place précédente et insérer après
+        t_ville_elt* parent = liste;
+        t_ville_elt *header = liste;
+        // Il faut trouver l'élément précédent l'élément à insérer
+        // Donc la liste est parcourue tant que l'élément courant n'est pas NULL et que la valeur de l'élément à insérer est supérieure à la valeur de l'élément courant
+        while (header!=NULL && ville->nombre_vaccins_total > header->nombre_vaccins_total){
+        // Il faut deux pointeurs : un pour l'élément courant et un pour l'élément précédent
+                parent = header;
+                header = header->suivant;
+        }
+        parent->suivant = ville;
+        ville->suivant = header;
+        ville -> semaines_planifiees = l_semaine;
+        printf("\nLa ville %s est ajoutee.\n", liste->nom_ville);
+    }
+    return trierVilles(liste);
+    //return liste;
 }
 
 
 /* ========== SUPPRIMER SEMAINE DANS LISTE SEMAINES ========== */
 t_semaine_elt *supprimerSemaine (t_semaine_elt *liste, int semaine){
 
-    /*if (testSemaine(semaine, 0) == 0){
+    if (testSemaine(semaine, 0) == 0){
         {exit(EXIT_FAILURE);}
     }
-    else {*/
+    else {
         t_semaine_elt *header = liste;
         if (liste == NULL){
             printf("La liste de semaines est vide");
@@ -109,24 +124,26 @@ t_semaine_elt *supprimerSemaine (t_semaine_elt *liste, int semaine){
         if (liste->numero_semaine==semaine){ // si on supprime le premier élément de la liste
                 header = liste;
                 liste = liste->suivant;
+                header->suivant=NULL;
                 desallouerSemaine(&header);
+                return liste;
+            }
+        else {
+            t_semaine_elt *parent = liste;
+            while (header->numero_semaine!=semaine && header->numero_semaine < semaine && header!=NULL) {
+                   parent = header;
+                   header = header->suivant;
+            }
+            if (header->numero_semaine == semaine){
+                parent->suivant = header->suivant;
+                desallouerSemaine(&header);
+                header = NULL;
             }
             else {
-                t_semaine_elt *parent = liste;
-                while (header->numero_semaine!=semaine && header->numero_semaine < semaine && header!=NULL) {
-                       parent = header;
-                       header = header->suivant;
-                }
-                if (header->numero_semaine == semaine){
-                    parent->suivant = header->suivant;
-                    desallouerSemaine(&header);
-                    header = NULL;
-                }
-                else {
-                        printf("La semaine n'existe pas");
-                        return liste;
-                }
-            //}
+                    printf("La semaine n'existe pas");
+                    return liste;
+            }
+        }
     }
     return liste;
 
@@ -135,31 +152,34 @@ t_semaine_elt *supprimerSemaine (t_semaine_elt *liste, int semaine){
 
 /* ========== SUPPRIMER VILLE DANS LISTE VILLES ========== */
 t_ville_elt *supprimerVille (t_ville_elt *liste, char* ville){
+
     t_ville_elt *header = liste;
+    t_ville_elt *parent = liste;
         if (liste == NULL){
             printf("La liste de semaines est vide");
-            return liste;
+            return NULL;
         }
         if (strcmp(header->nom_ville,ville)==0){ // si on supprime le premier élément de la liste
                 header = liste;
                 liste = liste->suivant;
+                header->suivant=NULL;
+                desallouerVille(&header);
+                return liste;
+            }
+        else {
+            while (strcmp(header->nom_ville,ville)!=0 && header!=NULL) {
+                   parent = header;
+                   header = header->suivant;
+            }
+            if (strcmp(header->nom_ville,ville)==0){
+                parent->suivant = header->suivant;
+                header -> suivant = NULL;
                 desallouerVille(&header);
             }
             else {
-                t_ville_elt *parent = liste;
-                while (strcmp(header->nom_ville,ville)!=0 && header!=NULL) {
-                       parent = header;
-                       header = header->suivant;
-                }
-                if (strcmp(header->nom_ville,ville)==0){
-                    parent->suivant = header->suivant;
-                    desallouerVille(&header);
-                    header = NULL;
-                }
-                else {
-                        printf("La ville n'existe pas");
-                        return liste;
-                }
+                    printf("La ville n'existe pas");
+                    return liste;
+            }
     }
     return liste;
 }
@@ -168,10 +188,10 @@ t_ville_elt *supprimerVille (t_ville_elt *liste, char* ville){
 /* ========== AJOUT NB VACCIN DANS LISTE SEMAINES ========== */
 t_semaine_elt *ajouterVaccinS(t_semaine_elt *liste, int semaine, int nb_vaccins){
 
-    /*if (testSemaine(semaine, nb_vaccins) == 0){
+    if (testSemaine(semaine, nb_vaccins) == 0){
         {exit(EXIT_FAILURE);}
     }
-    else {*/
+    else {
         t_semaine_elt *header = liste;
         // Si la liste chaînée actuelle est vide, alors l'en-tête de la liste chaînée est remplacée par le nouvel élément semaine.
         if (header == NULL){
@@ -186,7 +206,7 @@ t_semaine_elt *ajouterVaccinS(t_semaine_elt *liste, int semaine, int nb_vaccins)
         else {
           liste=ajouterSemaine(liste, creerSemaine(semaine, nb_vaccins));
         }
-    //}
+    }
     return liste;
 }
 
@@ -195,10 +215,10 @@ t_semaine_elt *ajouterVaccinS(t_semaine_elt *liste, int semaine, int nb_vaccins)
 
 /* ========== RETRAIT NB VACCIN DE LISTE SEMAINES ========== */
 t_semaine_elt *deduireVaccinS(t_semaine_elt *liste, int semaine, int nb_vaccins){
-    /*if (testSemaine(semaine, nb_vaccins) == 0){
+    if (testSemaine(semaine, nb_vaccins) == 0){
         {exit(EXIT_FAILURE);}
     }
-    else {*/
+    else {
         t_semaine_elt *header = liste;
         if (liste == NULL){
             printf("La liste est vide");
@@ -207,20 +227,20 @@ t_semaine_elt *deduireVaccinS(t_semaine_elt *liste, int semaine, int nb_vaccins)
         while (header->numero_semaine!=semaine && header->numero_semaine < semaine && header!=NULL) {
                header=header->suivant;
         }
-        if (header->numero_semaine == semaine){
+       if (header==NULL){
+                printf("La semaine n'existe pas");
+                return liste;
+        }
+        else if (header->numero_semaine == semaine){
             if (header->nombre_vaccins < nb_vaccins)
                 printf("Impossible. Veuillez saisir un nombre de vaccins inferieur ou egal au nombre disponible : %d", header->nombre_vaccins);
             else {
             header->nombre_vaccins -= nb_vaccins;
             if (header->nombre_vaccins == 0)
-                supprimerSemaine(liste, semaine);
+                liste=supprimerSemaine(liste, semaine);
             }
         }
-        else {
-                printf("La semaine n'existe pas");
-                return liste;
-        }
-    //}
+    }
     return liste;
 }
 
@@ -244,64 +264,9 @@ t_ville_elt *ajouterVaccinV(t_ville_elt *liste, char* ville, int semaine, int nb
     else {
         header->semaines_planifiees = ajouterVaccinS(header->semaines_planifiees, semaine, nb_vaccins); // Ne pas oublier de récupérer l'élément renvoyé
     }
-    return liste;
-    /// ERREUR ICI
-    //return trierVilles(liste);
+    //return liste;
+    return trierVilles(liste);
 }
-
-
-// TRIER LISTE DE COMMUNES EN FONCTION DU NOMBRE TOTAL DE VACCINS
-t_ville_elt* trierVilles (t_ville_elt *liste){
-    t_ville_elt *headerV = liste;
-    // CALCULER NB TOTAL DE VACCINS
-    while (headerV!=NULL){
-        t_semaine_elt *headerS = headerV->semaines_planifiees;
-        while (headerS!=NULL){
-            headerV->nombre_vaccins_total += headerS->nombre_vaccins;
-            headerS=headerS->suivant;
-        }
-    }
-    // RANGER LES VILLES DANS L'ORDRE CROISSANT DU NB TOTAL DE VACCINS
-   t_ville_elt *temp1 = malloc(sizeof(t_ville_elt));
-   t_ville_elt *temp2 = malloc(sizeof(t_ville_elt));
-   int min;
-   char *ville;
-   t_semaine_elt *semaine;
-   t_ville_elt *suivant;
-
-   for(headerV=liste ; headerV!=NULL ; headerV=headerV->suivant)
-   {
-     temp2=headerV; // On sauvegarde la ville courante
-     min=headerV->nombre_vaccins_total; // On attribue à min le nb total de vaccins de la ville courante
-     // On cherche le minimum parmi tous les éléments suivant de la liste
-     for(temp1=headerV->suivant ; temp1!=NULL ; temp1=temp1->suivant)
-     {
-        if(min > temp1->nombre_vaccins_total) // Si un élément suivant est inférieur à la l'élément courant
-        {
-           temp2=temp1; // Le 3e temporaire est l'adresse de l'élement où se trouve le minimum
-           min=temp2->nombre_vaccins_total;
-           ville=temp2->nom_ville;
-           semaine=temp2->semaines_planifiees;
-           suivant = temp2->suivant;
-        }
-     }
-     // Echange des 2 villes
-     // Echange du nombre de vaccins total
-     temp2->nombre_vaccins_total=headerV->nombre_vaccins_total;
-     headerV->nombre_vaccins_total=min;
-     // Echange du nom de la ville
-     temp2->nom_ville = headerV->nom_ville;
-     headerV->nom_ville = ville;
-     // Echange des semaines
-     temp2->semaines_planifiees=headerV->semaines_planifiees;
-     headerV->semaines_planifiees=semaine;
-     // Echange de l'élément suivant
-     temp2->suivant=headerV->suivant;
-     headerV->suivant=suivant;
-   }
-    return liste;
-}
-
 
 
 /* ========== RETRAIT NB VACCIN DE LISTE VILLES ========== */
@@ -315,19 +280,20 @@ t_ville_elt *deduireVaccinV(t_ville_elt *liste, char* ville, int semaine, int nb
     while (header!=NULL && strcmp(header->nom_ville,ville)!=0 ){
         header=header->suivant;
     }
-    if (strcmp(header->nom_ville,ville)==0){
-        /*if(header->nombre_vaccins_total < nb_vaccins){
+    if(header==NULL) {
+        printf("La ville n'existe pas.");
+    }
+    else if (strcmp(header->nom_ville,ville)==0){
+        if(header->nombre_vaccins_total < nb_vaccins){
             printf("Impossible. Veuillez saisir un nombre de vaccins inferieur ou egal au nombre total disponible : %d", header->nombre_vaccins_total);
         }
-        else {*/
-                deduireVaccinS(liste->semaines_planifiees, semaine, nb_vaccins);
+        else {
+            header->semaines_planifiees=deduireVaccinS(header->semaines_planifiees, semaine, nb_vaccins);
+            header->nombre_vaccins_total-=nb_vaccins;
             // Cas où la ville n'a plus de vaccins
-            /*if (header->nombre_vaccins_total == 0)
-                liste = supprimerVille(liste, ville);*/
-        //}
-    }
-    else {
-        printf("La ville n'existe pas.");
+            if (header->nombre_vaccins_total == 0)
+                liste = supprimerVille(liste, ville);
+        }
     }
     return liste;
     //return trierVilles(liste);
@@ -426,6 +392,10 @@ void viderBuffer (){
 
 t_vaccin_elt *rechercheTableau(char *marqueV, t_vaccin_elt *GESTION_VACCINS[10], int instance){
     int i = 0;
+    if (*GESTION_VACCINS==NULL){
+        printf("Vaccin non trouve. Veuillez le creer.");
+        return NULL;
+    }
     while (i < instance-1 && strcmp(marqueV,GESTION_VACCINS[i]->marque)!=0) { // * car on compare les valeurs pointées !
       i++;
     }
@@ -441,13 +411,13 @@ t_vaccin_elt *rechercheTableau(char *marqueV, t_vaccin_elt *GESTION_VACCINS[10],
 
 
 bool testSemaine (int semaine, int nb_vaccins){
-    if ((semaine<1 && semaine>53) && (nb_vaccins <0)) {
-        printf("Le nombre de semaines doit être compris entre 1 et 53 !");
-        printf("Le nombre de vaccins doit être strictement positif !");
-        return 1;
+    if (semaine<1 || semaine>53 || nb_vaccins<0) {
+        printf("\n Le nombre de semaines doit etre compris entre 1 et 53 \n");
+        printf("\n Le nombre de vaccins doit etre strictement positif \n");
+        return 0;
     }
     else
-        return 0;
+        return 1;
 }
 
 
@@ -507,5 +477,32 @@ void desallouerListeSem (t_semaine_elt**ElementPrem) {
         desallouerSemaine(&n);
     }
     *ElementPrem=NULL;
+}
+
+// TRIER LISTE DE COMMUNES EN FONCTION DU NOMBRE TOTAL DE VACCINS
+t_ville_elt* trierVilles (t_ville_elt *liste){
+    t_ville_elt *headerV = liste;
+    // CALCULER NB TOTAL DE VACCINS
+    while (headerV!=NULL){
+        headerV->nombre_vaccins_total=0;
+        t_semaine_elt *headerS = headerV->semaines_planifiees;
+        while (headerS!=NULL){
+            headerV->nombre_vaccins_total += headerS->nombre_vaccins;
+            headerS=headerS->suivant;
+        }
+    headerV=headerV->suivant;
+    }
+
+    // RANGER LES VILLES DANS L'ORDRE CROISSANT DU NB TOTAL DE VACCINS
+
+    t_ville_elt *nouvelle_Liste = malloc(sizeof(t_ville_elt));
+    t_ville_elt *headerVille = liste;
+    while(headerVille!=NULL){
+        ajouterVille(nouvelle_Liste, headerVille, headerVille->semaines_planifiees);
+    }
+    liste = nouvelle_Liste;
+    liste->suivant=NULL;
+    desallouerListeVille(&liste);
+    return liste;
 }
 
