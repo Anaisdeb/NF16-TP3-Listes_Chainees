@@ -62,7 +62,7 @@ int main()
                 if (vaccin==NULL)
                     break;
                 else{
-                    printf("Veuillez entrer la ville dans laquelle ajouter le stock.\n");
+                    printf("Veuillez entrer la ville dans laquelle ajouter du stock.\n");
                     scanf("%124s", ville);
                     printf("Veuillez entrer le numero de la semaine dans laquelle ajouter le stock.\n");
                     scanf("%d", &semaine);
@@ -79,7 +79,7 @@ int main()
                 if (vaccin==NULL)
                     break;
                 else{
-                    printf("Veuillez entrer la ville dans laquelle ajouter le stock.\n");
+                    printf("Veuillez entrer la ville dans laquelle deduire le stock.\n");
                     scanf("%124s", ville);
                     printf("Veuillez entrer le numero de la semaine dans laquelle retirer le stock.\n");
                     scanf("%d", &semaine);
