@@ -95,24 +95,26 @@ t_ville_elt *ajouterVille (t_ville_elt *liste, t_ville_elt *ville, t_semaine_elt
 
 t_ville_elt *copieListe (t_ville_elt *liste, t_ville_elt *ville) {
     // si liste vide ou élément à ajouter en tête de liste
-    printf("salut");
-    if (liste == NULL || ville->nombre_vaccins_total <= liste->nombre_vaccins_total){
-        ville->suivant = liste;
-        liste = ville; //nouvelle tête de liste
+    t_ville_elt* nouvelleVille = creerVille(ville->nom_ville);
+    nouvelleVille->nombre_vaccins_total=ville->nombre_vaccins_total;
+    nouvelleVille->semaines_planifiees=ville->semaines_planifiees;
+
+    if (liste == NULL || nouvelleVille->nombre_vaccins_total <= liste->nombre_vaccins_total){
+        nouvelleVille->suivant = liste;
+        liste = nouvelleVille; //nouvelle tête de liste
     }
     else {//sinon chercher la place précédente et insérer après
-        printf("ça va");
         t_ville_elt* parent = liste;
         t_ville_elt *header = liste;
         // Il faut trouver l'élément précédent l'élément à insérer
         // Donc la liste est parcourue tant que l'élément courant n'est pas NULL et que la valeur de l'élément à insérer est supérieure à la valeur de l'élément courant
-        while (header!=NULL && ville->nombre_vaccins_total > header->nombre_vaccins_total){
+        while (header!=NULL && nouvelleVille->nombre_vaccins_total > header->nombre_vaccins_total){
         // Il faut deux pointeurs : un pour l'élément courant et un pour l'élément précédent
                 parent = header;
                 header = header->suivant;
         }
-        parent->suivant = ville;
-        ville->suivant = header;
+        parent->suivant = nouvelleVille;
+        nouvelleVille->suivant = header;
         printf("\nLa ville %s est copiee.\n", liste->nom_ville);
     }
     return liste;
@@ -428,10 +430,8 @@ bool testSemaine (int semaine, int nb_vaccins){
         printf("\n Le nombre de vaccins doit etre strictement positif \n");
         return 0;
     }
-    else{
-        printf("ok");
+    else
         return 1;
-    }
 }
 
 
@@ -498,6 +498,7 @@ t_ville_elt* trierVilles (t_ville_elt *liste){
 
     // CALCULER NB TOTAL DE VACCINS
     t_ville_elt *headerV = liste;
+    t_ville_elt *headerVille = liste;
     while (headerV!=NULL){
         headerV->nombre_vaccins_total=0;
         t_semaine_elt *headerS = headerV->semaines_planifiees;
@@ -507,19 +508,18 @@ t_ville_elt* trierVilles (t_ville_elt *liste){
         }
     headerV=headerV->suivant;
     }
-    /*
+
     // RANGER LES VILLES DANS L'ORDRE CROISSANT DU NB TOTAL DE VACCINS
-    printf("hello");
     t_ville_elt *nouvelle_Liste = malloc(sizeof(t_ville_elt));
-    t_ville_elt *headerVille = liste;
+    ///ERREUR
     while(headerVille!=NULL){
         nouvelle_Liste=copieListe(nouvelle_Liste, headerVille);
         headerVille=headerVille->suivant;
     }
-    printf("hello 2");
-    liste = nouvelle_Liste;
+    /*liste = nouvelle_Liste;
     liste->suivant=NULL;
     desallouerListeVille(&liste);*/
+
     return liste;
 }
 
