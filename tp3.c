@@ -89,34 +89,7 @@ t_ville_elt *ajouterVille (t_ville_elt *liste, t_ville_elt *ville, t_semaine_elt
     ville -> semaines_planifiees = l_semaine;
     liste = ville; // nouvelle tête de liste
     printf("\nLa ville %s est ajoutee.\n", liste->nom_ville);
-    return trierVilles(liste);
-    //return liste;
-}
 
-t_ville_elt *copieListe (t_ville_elt *liste, t_ville_elt *ville) {
-    // si liste vide ou élément à ajouter en tête de liste
-    t_ville_elt* nouvelleVille = creerVille(ville->nom_ville);
-    nouvelleVille->nombre_vaccins_total=ville->nombre_vaccins_total;
-    nouvelleVille->semaines_planifiees=ville->semaines_planifiees;
-
-    if (liste == NULL || nouvelleVille->nombre_vaccins_total <= liste->nombre_vaccins_total){
-        nouvelleVille->suivant = liste;
-        liste = nouvelleVille; //nouvelle tête de liste
-    }
-    else {//sinon chercher la place précédente et insérer après
-        t_ville_elt* parent = liste;
-        t_ville_elt *header = liste;
-        // Il faut trouver l'élément précédent l'élément à insérer
-        // Donc la liste est parcourue tant que l'élément courant n'est pas NULL et que la valeur de l'élément à insérer est supérieure à la valeur de l'élément courant
-        while (header!=NULL && nouvelleVille->nombre_vaccins_total > header->nombre_vaccins_total){
-        // Il faut deux pointeurs : un pour l'élément courant et un pour l'élément précédent
-                parent = header;
-                header = header->suivant;
-        }
-        parent->suivant = nouvelleVille;
-        nouvelleVille->suivant = header;
-        printf("\nLa ville %s est copiee.\n", liste->nom_ville);
-    }
     return liste;
 }
 
@@ -265,15 +238,21 @@ t_ville_elt *ajouterVaccinV(t_ville_elt *liste, char* ville, int semaine, int nb
     }
     if (liste == NULL){
         liste = ajouterVille(liste, creerVille(ville), creerSemaine(semaine, nb_vaccins));
-        return liste;
+        return trierVilles(liste);
     }
     t_ville_elt *header = liste;
     while (header!=NULL && strcmp(header->nom_ville,ville)!=0 ){ // strcmp permet de comparer deux chaînes de caractères
+        printf("%s \n", header ->nom_ville);
+        printf("il n'y a peut-etre un prochain élément \n");
+        if(header->suivant==0)
+            printf("il n'y a pas de prochain élément");
         header=header->suivant;
+
     }
     if (header == NULL){ // On crée la ville
+                printf("hello");
         liste = ajouterVille(liste, creerVille(ville), creerSemaine(semaine, nb_vaccins));
-        return liste;
+                printf("hello2");
     }
     else {
         header->semaines_planifiees = ajouterVaccinS(header->semaines_planifiees, semaine, nb_vaccins); // Ne pas oublier de récupérer l'élément renvoyé
@@ -309,8 +288,8 @@ t_ville_elt *deduireVaccinV(t_ville_elt *liste, char* ville, int semaine, int nb
                 liste = supprimerVille(liste, ville);
         }
     }
-    return liste;
-    //return trierVilles(liste);
+    //return liste;
+    return trierVilles(liste);
 }
 
 /* ========== AFFICHER STOCK D'UN VACCIN ========== */
@@ -510,16 +489,6 @@ t_ville_elt* trierVilles (t_ville_elt *liste){
     }
 
     // RANGER LES VILLES DANS L'ORDRE CROISSANT DU NB TOTAL DE VACCINS
-    t_ville_elt *nouvelle_Liste = malloc(sizeof(t_ville_elt));
-    ///ERREUR
-    while(headerVille!=NULL){
-        nouvelle_Liste=copieListe(nouvelle_Liste, headerVille);
-        headerVille=headerVille->suivant;
-    }
-    /*liste = nouvelle_Liste;
-    liste->suivant=NULL;
-    desallouerListeVille(&liste);*/
 
-    return liste;
 }
 
