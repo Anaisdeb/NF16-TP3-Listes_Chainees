@@ -93,6 +93,39 @@ t_ville_elt *ajouterVille (t_ville_elt *liste, t_ville_elt *ville, t_semaine_elt
     return liste;
 }
 
+t_ville_elt *copieListe (t_ville_elt *liste, t_ville_elt *ville) {
+    // si liste vide ou élément à ajouter en tête de liste
+    t_ville_elt* nouvelleVille = creerVille(ville->nom_ville);
+    nouvelleVille->nombre_vaccins_total=ville->nombre_vaccins_total;
+    printf("\nle nombre de vaccin total = %d  %d \n", nouvelleVille->nombre_vaccins_total, ville->nombre_vaccins_total);
+    nouvelleVille->suivant=NULL;
+    t_semaine_elt *headerS = ville->semaines_planifiees;
+    while(headerS!=NULL){
+        nouvelleVille->semaines_planifiees=ajouterVaccinS(nouvelleVille->semaines_planifiees,headerS->numero_semaine, headerS->nombre_vaccins);
+        headerS=headerS->suivant;
+    }
+
+    if (liste == NULL || nouvelleVille->nombre_vaccins_total <= liste->nombre_vaccins_total){
+        nouvelleVille->suivant = liste;
+        liste = nouvelleVille; //nouvelle tête de liste
+    }
+    else {//sinon chercher la place précédente et insérer après
+        t_ville_elt* parent = liste;
+        t_ville_elt *header = liste;
+        // Il faut trouver l'élément précédent l'élément à insérer
+        // Donc la liste est parcourue tant que l'élément courant n'est pas NULL et que la valeur de l'élément à insérer est supérieure à la valeur de l'élément courant
+        while (header!=NULL && nouvelleVille->nombre_vaccins_total > header->nombre_vaccins_total){
+        // Il faut deux pointeurs : un pour l'élément courant et un pour l'élément précédent
+                parent = header;
+                header = header->suivant;
+        }
+        parent->suivant = nouvelleVille;
+        nouvelleVille->suivant = header;
+        printf("\nLa ville %s est copiee.\n", liste->nom_ville);
+    }
+    return liste;
+}
+
 
 /* ========== SUPPRIMER SEMAINE DANS LISTE SEMAINES ========== */
 t_semaine_elt *supprimerSemaine (t_semaine_elt *liste, int semaine){
@@ -489,6 +522,14 @@ t_ville_elt* trierVilles (t_ville_elt *liste){
     }
 
     // RANGER LES VILLES DANS L'ORDRE CROISSANT DU NB TOTAL DE VACCINS
-
+    t_ville_elt *nouvelle_Liste = malloc(sizeof(t_ville_elt));
+    nouvelle_Liste=NULL; // Ne pas oublier d'initialiser !!!
+    while(headerVille!=NULL){
+        nouvelle_Liste=copieListe(nouvelle_Liste, headerVille);
+        headerVille=headerVille->suivant;
+    }
+    liste->suivant=NULL;
+    desallouerListeVille(&liste);
+    return nouvelle_Liste;
 }
 
