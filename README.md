@@ -3,15 +3,14 @@
 💡 Programmation en C
 
 📚 Travaux Pratiques de NF16 (Cours "Algorithmique et structures de données" de l'Université de Technologie de Compiègne). 
-
-## Composition de l'équipe de projet
-
-  * Nada Slimani
-  * Anaïs Débureaux
   
 ## Contenu du répertoire
   
-  * Sujet.pdf : sujet du projet
+  * sujet.pdf : sujet du projet.
+  * rapport.pdf : rapport du projet.
+  * tp3.h : fichier d’en-tête contenant la déclaration des structures/fonctions de base.
+  * tp3.c : ichier source contenant la définition de chaque fonction.
+  * main.c : fichier source contenant le programme principal.
 
 ## Objectif 
 
